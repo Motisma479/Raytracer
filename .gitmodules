@@ -1,0 +1,3 @@
+[submodule "Externals/LibMath"]
+	path = Externals/LibMath
+	url = https://github.com/Motisma479/LibMath.git
