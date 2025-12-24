@@ -12,6 +12,7 @@ set(SOURCES
     "Sources/main.cpp"
 
     "Sources/Core/Color.cpp"
+    "Sources/Core/Ray.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
