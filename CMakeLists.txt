@@ -10,6 +10,8 @@ include_directories( "Externals/LibMath" )
 include_directories( "Headers" )
 set(SOURCES
     "Sources/main.cpp"
+
+    "Sources/Core/Color.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
