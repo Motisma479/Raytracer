@@ -11,5 +11,5 @@ public:
 	Ray();
 	Ray(const Maths::Vec3& orig_, const Maths::Vec3& dir_);
 
-	Maths::Vec3 At(f32 t);
+	Maths::Vec3 At(f32 t) const;
 };
