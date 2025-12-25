@@ -16,6 +16,7 @@ set(SOURCES
     "Sources/Core/Ray.cpp"
     "Sources/Core/Settings.cpp"
 
+    "Sources/Hittable/HittableList.cpp"
     "Sources/Hittable/Sphere.cpp"
 )
 
