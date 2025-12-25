@@ -2,23 +2,32 @@
 #include <fstream>
 #include <iomanip>
 
+#include "Core/Settings.hpp"
+
 #include "Core/Color.hpp"
 #include "Core/Ray.hpp"
 
-bool HitSphere(const Maths::Vec3& center_, f32 radius_, const Ray& ray_)
+
+float HitSphere(const Maths::Vec3& center_, f32 radius_, const Ray& ray_)
 {
     Maths::Vec3 oc = center_ - ray_.orig;
     f32 a = Maths::Vectors::DotProduct(ray_.dir, ray_.dir);
     f32 b = -2.f * Maths::Vectors::DotProduct(ray_.dir, oc);
     f32 c = Maths::Vectors::DotProduct(oc, oc) - radius_ * radius_;
     f32 discriminant = b * b - 4 * a * c;
-    return discriminant >= 0;
+    if (discriminant < 0)
+        return -1.f;
+    return (-b - std::sqrt(discriminant)) / (2.f*a);
 }
 
 Color RayColor(const Ray& ray_)
 {
-    if (HitSphere({ 0.f, 0.f, -1.f }, 0.5f, ray_))
-        return { 1.f, 0.f, 0.f };
+    float hs = HitSphere({ 0.f, 0.f, -1.f }, 0.5f, ray_);
+    if (hs > 0.f)
+    {
+        Maths::Vec3 N = Maths::Vectors::Normalize(ray_.At(hs) - Maths::Vec3(0.f, 0.f, -1.f));
+        return (N + 1) * 0.5;
+    }
 
     Maths::Vec3 unitDirection = Maths::Vectors::Normalize(ray_.dir);
     f32 a = 0.5f * (unitDirection.y + 1.f);
@@ -27,18 +36,16 @@ Color RayColor(const Ray& ray_)
 
 int main(int argc, char* argv[])
 {
-    //--------------------------------------
-    //All argument are listed here, a settings struct would be nice to enable more informations etc..
-    for(int i = 0; i<argc; ++i)
+    ParseArgs(argc, argv);
+    if (Settings().showHelp)
     {
-        std::cout << argv[i] << std::endl;
+        std::cout << "Raytracer [options] <value>\n\nOptions:\n-h, --help         Show help\n-d, --debug <int>  Set the debug Level (0 - 2)" << std::endl;
     }
-    //--------------------------------------
-
 
     float aspectRatio = 16.f / 9.f;
 
     s32 image_width = 400;
+    //s32 image_width = 1920;
     s32 image_height = static_cast<int>(image_width / aspectRatio);
     image_height = (image_height < 1) ? 1 : image_height; //ensure that the height is at least 1;
 
