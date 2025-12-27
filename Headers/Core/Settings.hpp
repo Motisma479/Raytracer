@@ -3,13 +3,10 @@
 #include <string>
 #include <vector>
 
-struct Option
-{
-	std::string shortVerion;
-	std::string longVersion;
-	std::string valueType;  //optional if not used put ""
-	std::string description;
-};
+// 16.f / 9.f; //common PC screen ratio
+// 9.f / 16.f; //vertical smartphone screen ratio
+// 3.f / 2.f;  //photo ratio
+// 1.f;        //social media ratio
 
 
 enum class DebugLevel
@@ -23,6 +20,8 @@ struct AppSettings
 {
 	bool showHelp = false;
 	DebugLevel debugLevel = DebugLevel::LITTLE_DEBUG;
+	f32 aspectRatio = 16.f / 9.f;
+	s32 imageWidth = 1920;
 };
 
 const AppSettings& Settings();

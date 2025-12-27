@@ -27,5 +27,36 @@ void ParseArgs(s32 argc, char* argv[])
 
 			settings.debugLevel = static_cast<DebugLevel>(level);
 		}
+
+		if (arg == "-r" || arg == "--ratio")
+		{
+			if (i + 1 == argc)
+				throw std::runtime_error(arg + " : <float> needed. do -h/--help for more information.");
+		
+
+			std::string ip1 = argv[i + 1];
+			s32 pos = ip1.find('/');
+			if (pos != std::string::npos)
+			{
+				f32 a = std::stof(ip1.substr(0, pos));
+				f32 b = std::stof(ip1.substr(pos+1));
+				settings.aspectRatio = a/b;
+			}
+			else
+			{
+				settings.aspectRatio = std::stof(ip1);
+			}
+
+		}
+
+		if (arg == "-w" || arg == "--width")
+		{
+			if (i + 1 == argc)
+				throw std::runtime_error(arg + " : <int> needed. do -h/--help for more information.");
+
+			settings.imageWidth = std::stoi(argv[i + 1]);
+			if (settings.imageWidth < 1)
+				throw std::runtime_error(arg + " : invalid width. do -h/--help for more information.");
+		}
 	}
 }
