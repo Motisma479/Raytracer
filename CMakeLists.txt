@@ -19,6 +19,8 @@ set(SOURCES
 
     "Sources/Hittable/HittableList.cpp"
     "Sources/Hittable/Sphere.cpp"
+
+    "Sources/LowRenderer/Camera.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
