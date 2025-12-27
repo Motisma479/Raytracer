@@ -5,7 +5,7 @@ class Sphere : public IHittable
 {
 public:
 	Sphere(const Maths::Vec3& center_, f32 radius_);
-	bool Hit(const Ray& ray_, f32 rayTMin_, f32 rayTMax_, HitRecord& record_) const override;
+	bool Hit(const Ray& ray_, Interval rayT_, HitRecord& record_) const override;
 private:
 	Maths::Vec3 _center;
 	f32 _radius;

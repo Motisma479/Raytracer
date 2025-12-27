@@ -11,7 +11,7 @@
 Color RayColor(const Ray& ray_, const HittableList& lists_)
 {
     HitRecord record;
-    if (lists_.Hit(ray_, 0, Maths::Constants::INF, record))
+    if (lists_.Hit(ray_, Interval(0, Maths::Constants::INF), record))
     {
         return (record.normal + 1) * 0.5;
     }

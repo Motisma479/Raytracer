@@ -12,15 +12,15 @@ void HittableList::Clear()
 	objects.clear();
 }
 
-bool HittableList::Hit(const Ray& ray_, f32 rayTMin_, f32 rayTMax_, HitRecord& record_) const
+bool HittableList::Hit(const Ray& ray_, Interval rayT_, HitRecord& record_) const
 {
 	bool asHitAnything = false;
-	f32 closestSoFar = rayTMax_;
+	f32 closestSoFar = rayT_.max;
 	HitRecord tempRecord;
 
 	for (const std::shared_ptr<IHittable>& object : objects)
 	{
-		if (object->Hit(ray_, rayTMin_, closestSoFar, tempRecord))
+		if (object->Hit(ray_, Interval(rayT_.min, closestSoFar), tempRecord))
 		{
 			asHitAnything = true;
 			closestSoFar = tempRecord.t;
