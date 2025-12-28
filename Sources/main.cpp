@@ -21,8 +21,20 @@ int main(int argc, char* argv[])
     const AppSettings& settings = Settings();
     if (settings.showHelp)
     {
-        std::cout << "Raytracer [options] <value>\n\nOptions:\n-h, --help         Show help\n-d, --debug <int>  Set the debug Level (0 - 2)" << std::endl;
+        std::cout << "\nRaytracer [options] <value>\n"
+                  << "\nOptions:\n"
+                  << "-h, --help                         Show help\n"
+                  << "-d, --debug <int>                  Set the debug level (0 - 2)\n"
+                  << "-r, --ratio <float/literal>        Set the camera ratio (recommended: 16/9)\n"
+                  << "-w, --width <int>                  Set the width of the output image\n"
+                  << "-s, --seed  <unsigned long long>   Set the initial seed\n" << std::endl;
+    
+        //returning here is intended as the user would only use -h to find this list.
+        return 0;
     }
+    
+    if(settings.debugLevel == DebugLevel::FULL_DEBUG)
+        std::clog << "Initial seed: " << settings.seed << std::endl;
 
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
