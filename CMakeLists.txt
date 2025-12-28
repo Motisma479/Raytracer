@@ -14,6 +14,7 @@ set(SOURCES
     "Sources/Core/Color.cpp"
     "Sources/Core/Hittable.cpp"
     "Sources/Core/Interval.cpp"
+    "Sources/Core/Random.cpp"
     "Sources/Core/Ray.cpp"
     "Sources/Core/Settings.cpp"
 
