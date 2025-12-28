@@ -58,5 +58,13 @@ void ParseArgs(s32 argc, char* argv[])
 			if (settings.imageWidth < 1)
 				throw std::runtime_error(arg + " : invalid width. do -h/--help for more information.");
 		}
+		
+		if (arg == "-s" || arg == "--seed")
+		{
+			if (i + 1 == argc)
+				throw std::runtime_error(arg + " : <unsigned long long> needed. do -h/--help for more information.");
+
+			settings.seed = std::stoull(argv[i + 1]);
+		}
 	}
 }

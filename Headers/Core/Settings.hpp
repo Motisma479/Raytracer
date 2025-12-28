@@ -2,6 +2,7 @@
 #include "Type.hpp"
 #include <string>
 #include <vector>
+#include <chrono>
 
 // 16.f / 9.f; //common PC screen ratio
 // 9.f / 16.f; //vertical smartphone screen ratio
@@ -22,6 +23,7 @@ struct AppSettings
 	DebugLevel debugLevel = DebugLevel::LITTLE_DEBUG;
 	f32 aspectRatio = 16.f / 9.f;
 	s32 imageWidth = 1920;
+	u64 seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 };
 
 const AppSettings& Settings();
