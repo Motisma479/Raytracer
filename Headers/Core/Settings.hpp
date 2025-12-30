@@ -1,5 +1,7 @@
 #pragma once
-#include "Type.hpp"
+#include "Core/Type.hpp"
+#include "Core/LogLevels.hpp"
+
 #include <string>
 #include <vector>
 #include <chrono>
@@ -10,17 +12,10 @@
 // 1.f;        //social media ratio
 
 
-enum class DebugLevel
-{
-	NO_DEBUG,
-	LITTLE_DEBUG,
-	FULL_DEBUG
-};
-
 struct AppSettings
 {
 	bool showHelp = false;
-	DebugLevel debugLevel = DebugLevel::LITTLE_DEBUG;
+	DebugVerbosity debugVerbosity = DebugVerbosity::LITTLE_DEBUG;
 	f32 aspectRatio = 16.f / 9.f;
 	s32 imageWidth = 1920;
 	u64 seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();

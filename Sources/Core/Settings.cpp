@@ -23,9 +23,9 @@ void ParseArgs(s32 argc, char* argv[])
 				throw std::runtime_error(arg + " : <int> needed. do -h/--help for more information.");
 			s32 level = std::stoi(argv[i + 1]);
 			if(level < 0 || level > 2)
-				throw std::runtime_error(arg + " : invalid debug level. do -h/--help for more information.");
+				throw std::runtime_error(arg + " : invalid debug verbosity. do -h/--help for more information.");
 
-			settings.debugLevel = static_cast<DebugLevel>(level);
+			settings.debugVerbosity = static_cast<DebugVerbosity>(level);
 		}
 
 		if (arg == "-r" || arg == "--ratio")

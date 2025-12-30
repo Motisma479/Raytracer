@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
         std::cout << "\nRaytracer [options] <value>\n"
                   << "\nOptions:\n"
                   << "-h, --help                         Show help\n"
-                  << "-d, --debug <int>                  Set the debug level (0 - 2)\n"
+                  << "-d, --debug <int>                  Set the debug verbosity (0 - 2)\n"
                   << "-r, --ratio <float/literal>        Set the camera ratio (recommended: 16/9)\n"
                   << "-w, --width <int>                  Set the width of the output image\n"
                   << "-s, --seed  <unsigned long long>   Set the initial seed\n" << std::endl;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         return 0;
     }
     
-    if(settings.debugLevel == DebugLevel::FULL_DEBUG)
+    if(settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
         std::clog << "Initial seed: " << settings.seed << std::endl;
 
     //-- Camera ----------------------------
