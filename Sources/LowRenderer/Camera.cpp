@@ -1,4 +1,5 @@
 #include "LowRenderer/Camera.hpp"
+#include "Core/Logger.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -43,21 +44,24 @@ void Camera::Render(const IHittable& object_)
     const AppSettings& settings = Settings();
 
     //This will be used in a screen shot and will become a real time class
-    std::cout << "Rendering..." << std::endl;
+    MESSAGE_LOG_EX("Rendering...", "Rendering", DebugVerbosity::NO_DEBUG);
+
     s32 pixelsNumber = _imageWidth * _imageHeight;
     s32 imagePixelsMaxDigit = NumberOfDigit(pixelsNumber);
 
-    if (settings.debugLevel == DebugLevel::FULL_DEBUG)
-        std::clog << "Rendering Settings:\n   width:        " << _imageWidth << "\n   height:       " << _imageHeight << "\n   aspect ratio: " << _aspectRatio << std::endl;
+    MESSAGE_LOG_EX("Rendering Settings:", "Rendering", DebugVerbosity::FULL_DEBUG);
+    MESSAGE_LOG_EX(std::format("   width:        {:}", _imageWidth), "Rendering", DebugVerbosity::FULL_DEBUG);
+    MESSAGE_LOG_EX(std::format("   height:       {:}", _imageHeight), "Rendering", DebugVerbosity::FULL_DEBUG);
+    MESSAGE_LOG_EX(std::format("   aspect ratio: {:}", _aspectRatio), "Rendering", DebugVerbosity::FULL_DEBUG);
 
     std::string filename = "Test.PPM";
     std::ofstream ostrm(filename, std::ios::binary);
     ostrm << "P3\n" << _imageWidth << ' ' << _imageHeight << "\n255\n";
 
     //std::cout << std::setfill('0') << "progress:\nline: 000; row: 000";
-    if (settings.debugLevel == DebugLevel::LITTLE_DEBUG)
+    if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
         std::clog << std::setfill('0') << "Progress: 000% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 0) << ']';
-    if (settings.debugLevel == DebugLevel::FULL_DEBUG)
+    if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
         std::clog << "Progress: 000% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 0) << "] \xe2\x94\x83 Completed: " << std::setfill(' ') << std::setw(imagePixelsMaxDigit) << 0 << "px / " << pixelsNumber << "px";
 
 
@@ -73,21 +77,21 @@ void Camera::Render(const IHittable& object_)
 
             ostrm << col.RGB255_str() << '\n';
         }
-        if (settings.debugLevel == DebugLevel::LITTLE_DEBUG)
+        if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
         {
             s32 progress = static_cast<s32>((100 * j) / _imageHeight);
             std::clog << "\rProgress: " << std::setw(3) << progress << "% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, progress) << ']'; //not the best but it is alright
         }
-        if (settings.debugLevel == DebugLevel::FULL_DEBUG)
+        if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
         {
             s32 progress = static_cast<s32>((100 * j) / _imageHeight);
             std::clog << "\rProgress: " << std::setfill('0') << std::setw(3) << progress << "% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, progress) << "] \xe2\x94\x83 Completed: " << std::setfill(' ') << std::setw(imagePixelsMaxDigit) << _imageWidth * j << "px / " << pixelsNumber << "px";
         }
     }
-    if (settings.debugLevel == DebugLevel::LITTLE_DEBUG)
+    if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
         std::clog << "\rProgress: 100% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 100) << "]\n";
 
-    if (settings.debugLevel == DebugLevel::FULL_DEBUG)
+    if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
         std::clog << "\rProgress: 100% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 100) << "] \xe2\x94\x83 Completed: " << pixelsNumber << "px / " << pixelsNumber << "px\n";
 
     std::cout << "Image Finished" << std::endl;

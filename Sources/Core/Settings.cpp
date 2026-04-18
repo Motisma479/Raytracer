@@ -1,4 +1,5 @@
 #include "Core/Settings.hpp"
+#include "Core/Logger.hpp"
 #include <iostream>
 AppSettings settings;
 
@@ -26,6 +27,7 @@ void ParseArgs(s32 argc, char* argv[])
 				throw std::runtime_error(arg + " : invalid debug verbosity. do -h/--help for more information.");
 
 			settings.debugVerbosity = static_cast<DebugVerbosity>(level);
+			SET_SHOW_TO_LEVEL(level);
 		}
 
 		if (arg == "-r" || arg == "--ratio")

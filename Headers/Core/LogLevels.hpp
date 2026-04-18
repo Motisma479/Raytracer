@@ -1,6 +1,6 @@
 #pragma once
 
-enum class DebugVerbosity
+enum class DebugVerbosity : unsigned int
 {
 	NO_DEBUG,
 	LITTLE_DEBUG,

@@ -6,6 +6,12 @@
 #include "Hittable/HittableList.hpp"
 #include "Hittable/Sphere.hpp"
 
+#include <functional>
+
+#include "Core/LogLevels.hpp"
+
+#define LOG_USE_CLOG
+#include "Core/Logger.hpp"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -32,9 +38,9 @@ int main(int argc, char* argv[])
         //returning here is intended as the user would only use -h to find this list.
         return 0;
     }
-    
-    if(settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
-        std::clog << "Initial seed: " << settings.seed << std::endl;
+
+    MESSAGE_LOG_EX(std::format("Initial seed: {:}", settings.seed), "App Init", DebugVerbosity::FULL_DEBUG);
+
 
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
