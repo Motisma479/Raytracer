@@ -13,6 +13,7 @@ public:
 	Camera(f32 aspectRatio_, s32 imageWidth_);
 	
 	void Render(const IHittable& object_);
+	void ScreenShot(const IHittable& object_);
 
 private:
 	f32 _aspectRatio;
