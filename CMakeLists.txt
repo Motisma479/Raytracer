@@ -6,6 +6,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #Add LibMath submodule to the include directories
 include_directories( "Externals/LibMath" )
+#--GLFW-RELATED-------------------------------------------------------
+set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
+set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
+add_subdirectory( "Externals/GLFW" )
+#--GLAD---------------------------------------------------------------
+add_subdirectory( "Externals/GLAD/cmake" )
+glad_add_library(glad_gl STATIC
+    REPRODUCIBLE
+    API gl:core=4.6   # change version if needed
+)
+#---------------------------------------------------------------------
 
 include_directories( "Headers" )
 set(SOURCES
@@ -14,7 +25,6 @@ set(SOURCES
     "Sources/Core/Color.cpp"
     "Sources/Core/Hittable.cpp"
     "Sources/Core/Interval.cpp"
-    #"Sources/Core/Logger.cpp"
     "Sources/Core/Random.cpp"
     "Sources/Core/Ray.cpp"
     "Sources/Core/Settings.cpp"
@@ -26,3 +36,4 @@ set(SOURCES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)
