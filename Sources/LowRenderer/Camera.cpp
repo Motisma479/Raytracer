@@ -49,7 +49,7 @@ void Camera::Render(const IHittable& object_)
 
             Ray ray(_center, rayDirection);
 
-            Image[j * _imageWidth + i] = RayColor(ray, object_);
+            image[j * _imageWidth + i] = RayColor(ray, object_);
         }
     }
 }
@@ -79,7 +79,7 @@ void Camera::ScreenShot()
     for (s32 j = 0; j < _imageHeight; j++) {
         for (s32 i = 0; i < _imageWidth; i++) {
         
-            ostrm << Image[j * _imageWidth + i].RGB255_str() << '\n';
+            ostrm << image[j * _imageWidth + i].RGB255_str() << '\n';
         }
         if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
         {
@@ -105,7 +105,7 @@ void Camera::Init()
     _imageHeight = static_cast<int>(_imageWidth / _aspectRatio);
     _imageHeight = (_imageHeight < 1) ? 1 : _imageHeight; //ensure that the height is at least 1;
 
-    Image.assign(_imageWidth * _imageHeight, { 0,0,0 });
+    image.assign(_imageWidth * _imageHeight, { 0,0,0 });
 
     //-- Camera ----------------------------
     f32 focalLength = 1.f;

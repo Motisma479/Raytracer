@@ -17,6 +17,8 @@ public:
 	void Render(const IHittable& object_);
 	void ScreenShot();
 
+	inline const std::vector<Color>& GetData() const { return image; }
+
 private:
 	f32 _aspectRatio;
 
@@ -28,7 +30,7 @@ private:
 	Maths::Vec3 _pixelDeltaU;
 	Maths::Vec3 _pixelDeltaV;
 
-	std::vector<Color> Image;
+	std::vector<Color> image;
 
 	void Init();
 	Color RayColor(const Ray& ray_, const IHittable& object_) const;

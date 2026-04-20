@@ -1,6 +1,9 @@
 #pragma once
 #include "Core/Type.hpp"
+#include "Core/Color.hpp"
 #include "LibMath/Maths.hpp"
+
+#include <vector>
 
 #include <string>
 
@@ -20,8 +23,14 @@ public:
 
 	bool        ShouldClose();
 
+	void        SendToScreen(const std::vector<Color>& _image);
+
 	void        Update();
+
 private:
 	void* handle;
 	std::string defaultTitle;
+
+	//since the window is only used for rendering it will contain the shader, texture and mesh
+	u32 VAO, VBO, texture, shaderProgram;
 };

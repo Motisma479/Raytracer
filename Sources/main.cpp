@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
 
     camera.Render(objects);
+    window.SendToScreen(camera.GetData());
 
     while (!window.ShouldClose())
     {
