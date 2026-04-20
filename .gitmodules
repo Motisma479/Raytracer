@@ -4,3 +4,6 @@
 [submodule "Externals/GLFW"]
 	path = Externals/GLFW
 	url = https://github.com/glfw/glfw.git
+[submodule "Externals/GLAD"]
+	path = Externals/GLAD
+	url = https://github.com/dav1dde/glad
