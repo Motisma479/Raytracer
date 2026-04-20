@@ -41,10 +41,6 @@ Camera::Camera(f32 aspectRatio_, s32 imageWidth_) : _aspectRatio(aspectRatio_), 
 
 void Camera::Render(const IHittable& object_)
 {
-    s32 pixelsNumber = _imageWidth * _imageHeight;
-    std::vector<Color> Image;
-    Image.reserve(pixelsNumber);
-
     for (s32 j = 0; j < _imageHeight; j++) {
         for (s32 i = 0; i < _imageWidth; i++) {
 
@@ -53,67 +49,24 @@ void Camera::Render(const IHittable& object_)
 
             Ray ray(_center, rayDirection);
 
-            Image.push_back(RayColor(ray, object_));
+            Image[j * _imageWidth + i] = RayColor(ray, object_);
         }
     }
-
-    
 }
 
-void Camera::ScreenShot(const IHittable& object_)
+void Camera::ScreenShot()
 {
     const AppSettings& settings = Settings();
-
-    //This will be used in a screen shot and will become a real time class
-    MESSAGE_LOG_EX("Rendering...", "Rendering", DebugVerbosity::NO_DEBUG);
 
     s32 pixelsNumber = _imageWidth * _imageHeight;
     s32 imagePixelsMaxDigit = NumberOfDigit(pixelsNumber);
 
+    MESSAGE_LOG_EX("Exporting to PPM...", "Rendering", DebugVerbosity::NO_DEBUG);
     MESSAGE_LOG_EX("Rendering Settings:", "Rendering", DebugVerbosity::FULL_DEBUG);
     MESSAGE_LOG_EX(std::format("   width:        {:}", _imageWidth), "Rendering", DebugVerbosity::FULL_DEBUG);
     MESSAGE_LOG_EX(std::format("   height:       {:}", _imageHeight), "Rendering", DebugVerbosity::FULL_DEBUG);
     MESSAGE_LOG_EX(std::format("   aspect ratio: {:}", _aspectRatio), "Rendering", DebugVerbosity::FULL_DEBUG);
 
-    std::vector<Color> Image;
-    Image.reserve(pixelsNumber);
-
-    if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
-        std::clog << std::setfill('0') << "Rendering Progress: 000% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 0) << ']';
-    if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
-        std::clog << "Rendering Progress: 000% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 0) << "] \xe2\x94\x83 Completed: " << std::setfill(' ') << std::setw(imagePixelsMaxDigit) << 0 << "px / " << pixelsNumber << "px";
-
-    for (s32 j = 0; j < _imageHeight; j++) {
-        for (s32 i = 0; i < _imageWidth; i++) {
-
-            Maths::Vec3 pixelCenter = _pixel00Loc + (_pixelDeltaU * i) + (_pixelDeltaV * j);
-            Maths::Vec3 rayDirection = pixelCenter - _center;
-
-            Ray ray(_center, rayDirection);
-
-            Image.push_back(RayColor(ray, object_));
-        }
-        if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
-        {
-            s32 progress = static_cast<s32>((100 * j) / _imageHeight);
-            std::clog << "\rRendering Progress: " << std::setw(3) << progress << "% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, progress) << ']'; //not the best but it is alright
-        }
-        if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
-        {
-            s32 progress = static_cast<s32>((100 * j) / _imageHeight);
-            std::clog << "\rRendering Progress: " << std::setfill('0') << std::setw(3) << progress << "% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, progress) << "] \xe2\x94\x83 Completed: " << std::setfill(' ') << std::setw(imagePixelsMaxDigit) << _imageWidth * j << "px / " << pixelsNumber << "px";
-        }
-    }
-    if (settings.debugVerbosity == DebugVerbosity::LITTLE_DEBUG)
-        std::clog << "\rRendering Progress: 100% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 100) << "]\n";
-    if (settings.debugVerbosity == DebugVerbosity::FULL_DEBUG)
-        std::clog << "\rRendering Progress: 100% [" << ProgressBar("\xe2\x96\x88", "\xe2\x96\x91", 22, 100) << "] \xe2\x94\x83 Completed: " << pixelsNumber << "px / " << pixelsNumber << "px\n";
-
-    MESSAGE_LOG_EX("Rendering Completed.", "Rendering", DebugVerbosity::NO_DEBUG);
-
-
-
-    MESSAGE_LOG_EX("Exporting to PPM...", "Rendering", DebugVerbosity::NO_DEBUG);
     std::string filename = "Test.PPM";
     std::ofstream ostrm(filename, std::ios::binary);
     ostrm << "P3\n" << _imageWidth << ' ' << _imageHeight << "\n255\n";
@@ -151,6 +104,8 @@ void Camera::Init()
 {
     _imageHeight = static_cast<int>(_imageWidth / _aspectRatio);
     _imageHeight = (_imageHeight < 1) ? 1 : _imageHeight; //ensure that the height is at least 1;
+
+    Image.assign(_imageWidth * _imageHeight, { 0,0,0 });
 
     //-- Camera ----------------------------
     f32 focalLength = 1.f;
