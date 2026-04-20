@@ -17,7 +17,7 @@ struct AppSettings
 	bool showHelp = false;
 	DebugVerbosity debugVerbosity = DebugVerbosity::LITTLE_DEBUG;
 	f32 aspectRatio = 16.f / 9.f;
-	s32 imageWidth = 1920;
+	s32 imageWidth = 800;
 	u64 seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 };
 
