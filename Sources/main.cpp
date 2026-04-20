@@ -10,6 +10,8 @@
 
 #include "Core/LogLevels.hpp"
 
+#include "Core/Window.hpp"
+
 #define LOG_USE_CLOG
 #include "Core/Logger.hpp"
 
@@ -41,6 +43,7 @@ int main(int argc, char* argv[])
 
     MESSAGE_LOG_EX(std::format("Initial seed: {:}", settings.seed), "App Init", DebugVerbosity::FULL_DEBUG);
 
+    Window window(settings.imageWidth, settings.imageWidth / settings.aspectRatio,"Raytracer");
 
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
@@ -51,8 +54,14 @@ int main(int argc, char* argv[])
     objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, 0.f, -1.f), 0.5f));
     objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
 
+    camera.Render(objects);
 
-    camera.Render(objects);    
+    while (!window.ShouldClose())
+    {
+        window.Update();
+    }
+
+    camera.ScreenShot();
 
     return 0;
 }

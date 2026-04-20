@@ -28,6 +28,7 @@ set(SOURCES
     "Sources/Core/Random.cpp"
     "Sources/Core/Ray.cpp"
     "Sources/Core/Settings.cpp"
+    "Sources/Core/Window.cpp"
 
     "Sources/Hittable/HittableList.cpp"
     "Sources/Hittable/Sphere.cpp"
