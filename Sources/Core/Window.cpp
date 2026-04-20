@@ -26,6 +26,7 @@ Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr)
 
 	if (!gladLoadGL(glfwGetProcAddress))
 	{
+		glfwDestroyWindow((GLFWwindow*)handle);
 		glfwTerminate();
 		ERROR_LOG_EX("Cannot initialize GLAD", "Window Init", DebugVerbosity::LITTLE_DEBUG);
 		return ;
@@ -36,6 +37,7 @@ Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr)
 
 Window::~Window()
 {
+	glfwDestroyWindow((GLFWwindow*)handle);
 	glfwTerminate();
 }
 
