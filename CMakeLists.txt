@@ -16,6 +16,17 @@ glad_add_library(glad_gl STATIC
     REPRODUCIBLE
     API gl:core=4.6   # change version if needed
 )
+#--IMGUI--------------------------------------------------------------
+include_directories( "Externals/IMGUI" )
+set(EXTERNALS
+    "Externals/IMGUI/imgui.cpp"
+    "Externals/IMGUI/imgui_demo.cpp"
+    "Externals/IMGUI/imgui_draw.cpp"
+    "Externals/IMGUI/imgui_tables.cpp"
+    "Externals/IMGUI/imgui_widgets.cpp"
+    "Externals/IMGUI/backends/imgui_impl_opengl3.cpp"
+    "Externals/IMGUI/backends/imgui_impl_glfw.cpp"
+)
 #---------------------------------------------------------------------
 
 include_directories( "Headers" )
@@ -36,5 +47,5 @@ set(SOURCES
     "Sources/LowRenderer/Camera.cpp"
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES})
 target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)

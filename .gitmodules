@@ -7,3 +7,6 @@
 [submodule "Externals/GLAD"]
 	path = Externals/GLAD
 	url = https://github.com/dav1dde/glad
+[submodule "Externals/IMGUI"]
+	path = Externals/IMGUI
+	url = https://github.com/ocornut/imgui.git
