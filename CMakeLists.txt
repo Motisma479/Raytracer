@@ -27,6 +27,8 @@ set(EXTERNALS
     "Externals/IMGUI/backends/imgui_impl_opengl3.cpp"
     "Externals/IMGUI/backends/imgui_impl_glfw.cpp"
 )
+#--STB----------------------------------------------------------------
+include_directories( "Externals/STB" )
 #---------------------------------------------------------------------
 
 include_directories( "Headers" )
