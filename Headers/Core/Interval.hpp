@@ -13,5 +13,7 @@ public:
 	bool Contains(f32 value_);
 	bool Surrounds(f32 value_);
 
+	f32 Clamp(f32 value_);
+
 	static const Interval empty, universe;
 };

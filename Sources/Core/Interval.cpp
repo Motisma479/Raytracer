@@ -21,3 +21,8 @@ bool Interval::Surrounds(f32 value_)
 {
 	return min < value_ && value_ < max;
 }
+
+f32 Interval::Clamp(f32 value_)
+{
+	return (value_<min ? min : value_>max ? max : value_);
+}
