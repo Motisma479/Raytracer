@@ -48,21 +48,43 @@ int main(int argc, char* argv[])
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
 
-    //-- Scene -----------------------------
+    //-- Scene - 1 -----------------------------
     HittableList objects;
     //Sphere s({ 0.f,0.f,1.f }, 0.5f);
     objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, 0.f, -1.f), 0.5f));
     objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
+    
+    //-- Scene - 2 -----------------------------
+    HittableList objects2;
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(-0.5f, 0.f, -1.f), 0.5f));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.5f, 0.f, -1.f), 0.5f));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
 
-    camera.Render(objects);
+    //------------------------------------------
+    HittableList* sceneToUse = &objects;
+
+    camera.Render(*sceneToUse);
     window.SendToScreen(camera.GetData());
+
+    window.screenShot = [&]() {camera.ScreenShot(); };
+    window.onSceneChange = [&](s32 sceneId) {
+        switch (sceneId)
+        {
+        case 1:
+            sceneToUse = &objects2;
+            break;
+        default:
+            sceneToUse = &objects;
+            break;
+        }
+    };
 
     while (!window.ShouldClose())
     {
-        window.Update();
+        window.BeginUpdate();
+        camera.Render(*sceneToUse);
+        window.SendToScreen(camera.GetData());
+        window.EndUpdate();
     }
-
-    camera.ScreenShot();
-
     return 0;
 }

@@ -4,7 +4,7 @@
 #include "LibMath/Maths.hpp"
 
 #include <vector>
-
+#include <functional>
 #include <string>
 
 class Window
@@ -25,12 +25,20 @@ public:
 
 	void        SendToScreen(const std::vector<Color>& _image);
 
-	void        Update();
+	void        BeginUpdate();
+	void        EndUpdate();
 
+	std::function<void(void)> screenShot = []() {};
+	std::function<void(s32)> onSceneChange = [](s32){};
 private:
 	void* handle;
 	std::string defaultTitle;
 
 	//since the window is only used for rendering it will contain the shader, texture and mesh
 	u32 VAO, VBO, texture, shaderProgram;
+
+	void* guiIO;
+	bool showDebugGui;
+	void DrawDebugGUI();
+	bool screenShotOnQuit;
 };

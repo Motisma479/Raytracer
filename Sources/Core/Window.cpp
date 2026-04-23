@@ -4,9 +4,14 @@
 
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
-Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr)
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <queue>
+
+Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr), VAO(0), VBO(0), texture(0), shaderProgram(0), guiIO(nullptr), showDebugGui(false), screenShotOnQuit(true)
 {
 	if (!glfwInit())
 	{
@@ -120,10 +125,26 @@ void main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, _width, _height, 0, GL_RGB, GL_FLOAT, nullptr);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ImGui::CreateContext();
+	guiIO = &ImGui::GetIO();
+	((ImGuiIO*)guiIO)->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	((ImGuiIO*)guiIO)->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)handle, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 6);
 }
 
 Window::~Window()
 {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteTextures(1, &texture);
@@ -170,13 +191,108 @@ void Window::SendToScreen(const std::vector<Color>& _image)
 
 }
 
-void Window::Update()
+void Window::BeginUpdate()
+{
+	glfwPollEvents();
+
+	if (glfwGetKey((GLFWwindow*)handle, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose((GLFWwindow*)handle, true);
+	
+	static bool canTrigger = true;
+	if (canTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_F3) == GLFW_PRESS) showDebugGui = !showDebugGui; canTrigger = false;
+	if (!canTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_F3) == GLFW_RELEASE) canTrigger = true;
+
+	static bool shouldSave = false;
+	if ((glfwGetKey((GLFWwindow*)handle, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS || glfwGetKey((GLFWwindow*)handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS))
+	{
+		if (glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_PRESS)
+			shouldSave = true;
+		if (shouldSave && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_RELEASE)
+		{
+			screenShot();
+			shouldSave = false;
+		}
+	}
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	DrawDebugGUI();
+}
+
+void Window::EndUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	glfwSwapBuffers((GLFWwindow*)handle);
-	glfwPollEvents();
+}
+
+void Window::DrawDebugGUI()
+{
+	if (!showDebugGui) return;
+
+	s32 windowWidth, windowHeight;
+	glfwGetWindowSize((GLFWwindow*)handle, &windowWidth, &windowHeight);
+
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Screenshot", "Ctrl+S", nullptr))
+		{
+			screenShot();
+		}
+		ImGui::Separator();
+		if (ImGui::MenuItem("Exit", "Alt+F4", nullptr))
+		{
+			glfwSetWindowShouldClose((GLFWwindow*)handle, true);
+		}
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Scene"))
+	{
+		static const char* aa= "test";
+		static int sceneId = 0;
+		if (ImGui::Combo("##sceneCombo", &sceneId, "Scene1\0Scene2")) onSceneChange(sceneId);
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Settings"))
+	{
+		ImGui::MenuItem("Screenshot On Quit", NULL, &screenShotOnQuit);
+		ImGui::EndMenu();
+	}
+
+	ImGui::EndMainMenuBar();
+	
+	ImGui::SetNextWindowPos(ImVec2(20, windowHeight - 220));
+	ImGui::SetNextWindowSize(ImVec2(200, 200));
+	if (ImGui::Begin("FPSWindow", &showDebugGui, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar))
+	{
+		f32 ms = ((ImGuiIO*)guiIO)->DeltaTime * 1000.f;
+		ImGui::Text(std::format("FPS: {:7.3f}", ((ImGuiIO*)guiIO)->Framerate).c_str());
+		ImGui::Text(std::format("ms : {:.3f}", ms).c_str());
+		
+		
+		static f32 msQueue[50] = {};
+		for (int i = 48; i >= 0; i--)
+			msQueue[i + 1] = msQueue[i];
+		msQueue[0] = ms;
+
+		float average = 0.0f;
+		for (int n = 0; n < IM_COUNTOF(msQueue); n++)
+			average += msQueue[n];
+		average /= (float)IM_COUNTOF(msQueue);
+		char overlay[32];
+		sprintf(overlay, std::format("avg {:.3f}", average).c_str());
+		ImGui::PlotLines("##frameRateGraph", msQueue, IM_COUNTOF(msQueue), 0, overlay, -1.0f, 1.0f, ImVec2(182.f, 148.0f));
+
+		ImGui::End();
+	}
 }
