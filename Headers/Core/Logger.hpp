@@ -178,4 +178,4 @@ private:
 #define ERROR_LOG(message) Logger::Get().Log(Severity::ERROR, "Engine", message, 0)
 #define ERROR_LOG_EX(message, category, level) Logger::Get().Log(Severity::ERROR, category, message, (unsigned int)level)
 
-#define SET_SHOW_TO_LEVEL(newLevel) Logger::Get().SetShowToLevel(newLevel)
+#define SET_SHOW_TO_LEVEL(newLevel) Logger::Get().SetShowToLevel((unsigned int)newLevel)
