@@ -2,7 +2,7 @@
 
 #include <LibMath/Maths.hpp>
 #include "Core/Color.hpp"
-
+#include "Core/Random.hpp"
 #include <vector>
 
 class IHittable;
@@ -20,6 +20,8 @@ public:
 	inline const std::vector<Color>& GetData() const { return image; }
 
 private:
+	RNG* rng;
+
 	f32 _aspectRatio;
 
 	s32 _imageWidth;

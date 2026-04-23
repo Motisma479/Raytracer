@@ -44,12 +44,20 @@ void Camera::Render(const IHittable& object_)
     for (s32 j = 0; j < _imageHeight; j++) {
         for (s32 i = 0; i < _imageWidth; i++) {
 
-            Maths::Vec3 pixelCenter = _pixel00Loc + (_pixelDeltaU * i) + (_pixelDeltaV * j);
+            Maths::Vec3 pixelCenter = _pixel00Loc + (_pixelDeltaU * (i + rng->NextFloat(0, 1))) + (_pixelDeltaV * (j + +rng->NextFloat(0, 1)));
+            
             Maths::Vec3 rayDirection = pixelCenter - _center;
 
             Ray ray(_center, rayDirection);
 
-            image[j * _imageWidth + i] = RayColor(ray, object_);
+            Color newColor = RayColor(ray, object_);
+            Color history = image[j * _imageWidth + i];
+            Color outColor;
+            outColor.r = std::lerp(newColor.r, history.r, 0.9f);
+            outColor.g = std::lerp(newColor.g, history.g, 0.9f);
+            outColor.b = std::lerp(newColor.b, history.b, 0.9f);
+            //std::lerp(newColor, image[j * _imageWidth + i], 0.9f);
+            image[j * _imageWidth + i] = outColor;
         }
     }
 }
@@ -102,6 +110,8 @@ void Camera::ScreenShot()
 
 void Camera::Init()
 {
+    rng = new RNG(Settings().seed);//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
     _imageHeight = static_cast<int>(_imageWidth / _aspectRatio);
     _imageHeight = (_imageHeight < 1) ? 1 : _imageHeight; //ensure that the height is at least 1;
 
