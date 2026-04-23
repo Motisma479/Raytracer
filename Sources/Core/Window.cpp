@@ -10,6 +10,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <queue>
+#include <stb_image_write.h>
 
 Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr), VAO(0), VBO(0), texture(0), shaderProgram(0), guiIO(nullptr), showDebugGui(false), screenShotOnQuit(true)
 {
@@ -137,6 +138,15 @@ void main()
 	ImGui_ImplOpenGL3_Init("#version 460");
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 6);
+
+	glfwSetWindowUserPointer((GLFWwindow*)handle, &windowCallback);
+
+	glfwSetWindowSizeCallback((GLFWwindow*)handle, [](GLFWwindow* window, s32 width, s32 height) {
+		Window::WindowCallback* callback = static_cast<Window::WindowCallback*>(glfwGetWindowUserPointer(window));
+		callback->onSizeChange(width, height);
+		//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH, width, height);
+		glViewport(0, 0, width, height);
+	});
 }
 
 Window::~Window()
@@ -185,9 +195,8 @@ bool Window::ShouldClose()
 void Window::SendToScreen(const std::vector<Color>& _image)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
-	s32 width, height;
-	glfwGetWindowSize((GLFWwindow*)handle, &width, &height);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGB, GL_FLOAT, _image.data());
+	Maths::Vec2 size = GetSize();
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size.x, size.y, GL_RGB, GL_FLOAT, _image.data());
 
 }
 
@@ -201,17 +210,13 @@ void Window::BeginUpdate()
 	if (canTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_F3) == GLFW_PRESS) showDebugGui = !showDebugGui; canTrigger = false;
 	if (!canTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_F3) == GLFW_RELEASE) canTrigger = true;
 
-	static bool shouldSave = false;
+	static bool shouldSaveCanTrigger = true;
 	if ((glfwGetKey((GLFWwindow*)handle, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS || glfwGetKey((GLFWwindow*)handle, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS))
 	{
-		if (glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_PRESS)
-			shouldSave = true;
-		if (shouldSave && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_RELEASE)
-		{
-			screenShot();
-			shouldSave = false;
-		}
+		if (shouldSaveCanTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_PRESS) screenShot(); shouldSaveCanTrigger = false;
+		if (!shouldSaveCanTrigger && glfwGetKey((GLFWwindow*)handle, GLFW_KEY_S) == GLFW_RELEASE) shouldSaveCanTrigger = true;
 	}
+	else shouldSaveCanTrigger = true;
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();

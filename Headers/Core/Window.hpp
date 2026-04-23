@@ -30,6 +30,11 @@ public:
 
 	std::function<void(void)> screenShot = []() {};
 	std::function<void(s32)> onSceneChange = [](s32){};
+
+	struct WindowCallback
+	{
+		std::function<void(s32, s32)> onSizeChange = [](s32, s32){};
+	} windowCallback;
 private:
 	void* handle;
 	std::string defaultTitle;

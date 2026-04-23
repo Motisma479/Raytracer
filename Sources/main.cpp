@@ -41,10 +41,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    MESSAGE_LOG_EX(std::format("Initial seed: {:}", settings.seed), "App Init", DebugVerbosity::FULL_DEBUG);
-
-    Window window(settings.imageWidth, settings.imageWidth / settings.aspectRatio,"Raytracer");
-
+    SET_SHOW_TO_LEVEL(settings.debugVerbosity);
+    MESSAGE_LOG_EX(std::format("Initial seed= {:}", settings.seed), "App Init", DebugVerbosity::FULL_DEBUG);
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
 
@@ -63,7 +61,9 @@ int main(int argc, char* argv[])
     //------------------------------------------
     HittableList* sceneToUse = &objects;
 
-    camera.Render(*sceneToUse);
+    camera.Render(*sceneToUse,0,0,false);
+
+    Window window(settings.imageWidth, settings.imageWidth / settings.aspectRatio, "Raytracer");
     window.SendToScreen(camera.GetData());
 
     window.screenShot = [&]() {camera.ScreenShot(); };
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
             break;
         }
     };
-
+    window.windowCallback.onSizeChange = [&](s32 width, s32 height) { camera.Resize(width, height); camera.Render(*sceneToUse, 0, 0, false); };
     while (!window.ShouldClose())
     {
         window.BeginUpdate();
