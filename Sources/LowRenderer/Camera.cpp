@@ -9,6 +9,9 @@
 #include "Core/Hittable.hpp"
 #include "Core/Settings.hpp"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 //TODO move this function to a UtilsFunction.hpp/cpp file
 std::string ProgressBar(const char* full_, const char* empty_, int charLength_, int progress_)
 {
@@ -87,8 +90,6 @@ void Camera::Render(const IHittable& object_, const f32 minJitering, const f32 m
     preImage = image;
 }
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image_write.h>
 void Camera::ScreenShot()
 {
     MESSAGE_LOG_EX("Exporting to png...", "ScreenShot", DebugVerbosity::LITTLE_DEBUG);

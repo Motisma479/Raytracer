@@ -51,3 +51,10 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES})
 target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_CURRENT_LIST_DIR}/icon.png ${CMAKE_CURRENT_BINARY_DIR}/icon.png
+    COMMENT "Copying icon.png to output directory"
+)

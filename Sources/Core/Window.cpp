@@ -10,7 +10,9 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <queue>
-#include <stb_image_write.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr), VAO(0), VBO(0), texture(0), shaderProgram(0), guiIO(nullptr), showDebugGui(false), screenShotOnQuit(true)
 {
@@ -29,6 +31,14 @@ Window::Window(s32 _width, s32 _height, const char* _title) : handle(nullptr), V
 	}
 
 	glfwMakeContextCurrent((GLFWwindow*)handle);
+
+	GLFWimage icon;
+	icon.pixels = stbi_load("icon.png", &icon.width, &icon.height, nullptr, 4);
+	if (icon.pixels)
+	{
+		glfwSetWindowIcon((GLFWwindow*)handle,1, &icon);
+		stbi_image_free(icon.pixels);
+	}
 
 	if (!gladLoadGL(glfwGetProcAddress))
 	{
