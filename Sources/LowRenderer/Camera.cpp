@@ -62,7 +62,13 @@ void Camera::Render(const IHittable& object_, const f32 minJitering, const f32 m
 
             Ray ray(_center, rayDirection);
 
-            Color newColor = RayColor(ray, object_);
+            Color newColor = RayColor(ray, _maxDepth, object_);
+
+            static auto linearToGamma = [](f32 color) {return color > 0 ? std::sqrt(color) : 0; };
+
+            newColor.r = linearToGamma(newColor.r);
+            newColor.g = linearToGamma(newColor.g);
+            newColor.b = linearToGamma(newColor.b);
             if (useHistory)
             {
                 Color& history = preImage[pixelIndex];
@@ -150,12 +156,18 @@ void Camera::Init()
     _pixel00Loc = viewportUpperLeft + (_pixelDeltaU + _pixelDeltaV) * 0.5f;
 }
 
-Color Camera::RayColor(const Ray& ray_, const IHittable& object_) const
+Color Camera::RayColor(const Ray& ray_, s32 depth_, const IHittable& object_) const
 {
+    if (depth_ <= 0)
+        return { 0,0,0 };
+
     HitRecord record;
-    if (object_.Hit(ray_, Interval(0, Maths::Constants::INF), record))
+    if (object_.Hit(ray_, Interval(0.001, Maths::Constants::INF), record))
     {
-        return (record.normal + 1) * 0.5;
+        //return (record.normal + 1) * 0.5;
+        Maths::Vec3 direction = record.normal + rng->NextVec3Unit();//rng->NextOnHemisphere(record.normal);
+        Color res = RayColor(Ray(record.p, direction), depth_ - 1, object_);
+        return Color(res.r * 0.5, res.g * 0.5, res.b * 0.5);
     }
 
     Maths::Vec3 unitDirection = Maths::Vectors::Normalize(ray_.dir);

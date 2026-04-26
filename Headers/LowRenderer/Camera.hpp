@@ -28,6 +28,7 @@ private:
 
 	s32 _imageWidth;
 	s32 _imageHeight;
+	s32 _maxDepth = 10;
 
 	Maths::Vec3 _center;
 	Maths::Vec3 _pixel00Loc;
@@ -38,5 +39,5 @@ private:
 	std::vector<Color> preImage;
 
 	void Init();
-	Color RayColor(const Ray& ray_, const IHittable& object_) const;
+	Color RayColor(const Ray& ray_, s32 depth_, const IHittable& object_) const;
 };

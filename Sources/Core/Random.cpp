@@ -21,3 +21,28 @@ s32 RNG::NextInt(s32 min_, s32 max_)
 {
 	return min_ + static_cast<s32>(NextUInt() % (max_ - min_ + 1));
 }
+
+Maths::Vec3 RNG::NextVec3(f32 min_, f32 max_)
+{
+	return { NextFloat(min_, max_), NextFloat(min_, max_), NextFloat(min_, max_) };
+}
+
+Maths::Vec3 RNG::NextVec3Unit()
+{
+	while (true)
+	{
+		Maths::Vec3 p = NextVec3(-1, 1);
+		float lensq = p.GetMagnitudeSquared();
+		if (1e-160 < lensq && lensq <= 1)
+			return p / p.GetMagnitude();
+	}
+}
+
+Maths::Vec3 RNG::NextOnHemisphere(const Maths::Vec3 normal_)
+{
+	Maths::Vec3 on_unit_sphere = NextVec3Unit();
+	if (Maths::Vectors::DotProduct(on_unit_sphere, normal_) > 0.0) // In the same hemisphere as the normal
+		return on_unit_sphere;
+	else
+		return -on_unit_sphere;
+}
