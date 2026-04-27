@@ -9,6 +9,8 @@
 #include "Core/Hittable.hpp"
 #include "Core/Settings.hpp"
 
+#include "Core/Material.hpp"
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
@@ -55,8 +57,8 @@ void Camera::Render(const IHittable& object_, const f32 minJitering, const f32 m
             }
             else
             {
-                iJitering = rng->NextFloat(minJitering, maxJitering);
-                jJitering = rng->NextFloat(minJitering, maxJitering);
+                iJitering = RNG::Get().NextFloat(minJitering, maxJitering);
+                jJitering = RNG::Get().NextFloat(minJitering, maxJitering);
             }
 
             Maths::Vec3 pixelCenter = _pixel00Loc + (_pixelDeltaU * (i + iJitering)) + (_pixelDeltaV * (j + jJitering));
@@ -133,8 +135,6 @@ void Camera::Resize(f32 newWidth_, f32 newHeight_)
 
 void Camera::Init()
 {
-    rng = new RNG(Settings().seed);//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
     _imageHeight = static_cast<int>(_imageWidth / _aspectRatio);
     _imageHeight = (_imageHeight < 1) ? 1 : _imageHeight; //ensure that the height is at least 1;
 
@@ -165,8 +165,16 @@ Color Camera::RayColor(const Ray& ray_, s32 depth_, const IHittable& object_) co
     HitRecord record;
     if (object_.Hit(ray_, Interval(0.001, Maths::Constants::INF), record))
     {
+        Ray scattered;
+        Color attenuation;
+        if (record.material->Scatter(ray_, record, attenuation, scattered))
+        {
+            return RayColor(scattered, depth_ - 1, object_) * attenuation;
+        }
+        return { 0,0,0 };
+
         //return (record.normal + 1) * 0.5;
-        Maths::Vec3 direction = record.normal + rng->NextVec3Unit();//rng->NextOnHemisphere(record.normal);
+        Maths::Vec3 direction = record.normal + RNG::Get().NextVec3Unit();//rng->NextOnHemisphere(record.normal);
         Color res = RayColor(Ray(record.p, direction), depth_ - 1, object_);
         return Color(res.r * 0.5, res.g * 0.5, res.b * 0.5);
     }

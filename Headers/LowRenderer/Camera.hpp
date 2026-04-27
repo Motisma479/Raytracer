@@ -22,8 +22,6 @@ public:
 	void Resize(f32 newWidth_, f32 newHeight_);
 
 private:
-	RNG* rng;
-
 	f32 _aspectRatio;
 
 	s32 _imageWidth;

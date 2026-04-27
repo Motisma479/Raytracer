@@ -1,11 +1,17 @@
 #pragma once
 #include "Core/Ray.hpp"
 #include "Core/Interval.hpp"
+
+#include <memory>
+
+class Material;
+
 class HitRecord
 {
 public:
 	Maths::Vec3 p;
 	Maths::Vec3 normal;
+	std::shared_ptr<Material> material;
 	f32 t;
 	bool frontFace;
 

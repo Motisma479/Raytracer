@@ -1,6 +1,6 @@
 #include "Hittable/Sphere.hpp"
 
-Sphere::Sphere(const Maths::Vec3& center_, f32 radius_) : _center(center_), _radius(std::fmax(0,radius_)) {}
+Sphere::Sphere(const Maths::Vec3& center_, f32 radius_, std::shared_ptr<Material> material_) : _center(center_), _radius(std::fmax(0,radius_)), _material(material_) {}
 
 float HitSphere(const Maths::Vec3& center_, f32 radius_, const Ray& ray_)
 {
@@ -38,5 +38,7 @@ bool Sphere::Hit(const Ray& ray_, Interval rayT_, HitRecord& record_) const
 	Maths::Vec3 outwardNormal = (record_.p - _center) / _radius;//TODO if not used later maybe dont create a varible
 	record_.SetFaceNormal(ray_, outwardNormal);
 	
+	record_.material = _material;
+
 	return true;
 }
