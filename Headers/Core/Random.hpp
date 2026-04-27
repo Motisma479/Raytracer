@@ -7,7 +7,8 @@ class RNG
 {
 public:
 	RNG(u64 seed_);
-	
+	static RNG& Get();
+
 	u32 NextUInt();
 
 	f32 NextFloat(f32 min_ = 0.f, f32 max_ = 1.f);

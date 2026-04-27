@@ -2,6 +2,8 @@
 
 RNG::RNG(u64 seed_) : _state(seed_), _inc(1442695040888963407u) {}
 
+RNG& RNG::Get() { static RNG instance(0); return instance; }
+
 u32 RNG::NextUInt()
 {
 	u64 oldState = _state;
