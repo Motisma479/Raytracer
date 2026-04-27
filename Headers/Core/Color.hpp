@@ -17,4 +17,6 @@ public:
 	Color(const Maths::Vec3& vec_);
 
 	std::string RGB255_str() const;
+
+	Color operator* (const Color& color_);
 };

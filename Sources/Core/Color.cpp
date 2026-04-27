@@ -10,3 +10,8 @@ std::string Color::RGB255_str() const
 {
 	return std::to_string(static_cast<s32>(255 * r)) + " " + std::to_string(static_cast<s32>(255 * g)) + " " + std::to_string(static_cast<s32>(255 * b));
 }
+
+Color Color::operator* (const Color& color_)
+{
+	return { r * color_.r, g * color_.g, b * color_.b };
+}
