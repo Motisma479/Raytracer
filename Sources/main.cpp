@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     objects3.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f, m2));
 
     //------------------------------------------
-    HittableList* sceneToUse = &objects3;
+    HittableList* sceneToUse = &objects;
 
     camera.Render(*sceneToUse,0,0,false);
 
@@ -96,10 +96,13 @@ int main(int argc, char* argv[])
             break;
         case 2:
             sceneToUse = &objects3;
+            break;
         default:
             sceneToUse = &objects;
             break;
         }
+
+        camera.Render(*sceneToUse, 0, 0, false);
     };
     window.windowCallback.onSizeChange = [&](s32 width, s32 height) { camera.Resize(width, height); camera.Render(*sceneToUse, 0, 0, false); };
     while (!window.ShouldClose())

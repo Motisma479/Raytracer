@@ -274,7 +274,7 @@ void Window::DrawDebugGUI()
 	{
 		static const char* aa= "test";
 		static int sceneId = 0;
-		if (ImGui::Combo("##sceneCombo", &sceneId, "Scene1\0Scene2")) onSceneChange(sceneId);
+		if (ImGui::Combo("##sceneCombo", &sceneId, "Scene1\0Scene2\0Scene3")) onSceneChange(sceneId);
 		ImGui::EndMenu();
 	}
 
