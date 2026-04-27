@@ -15,6 +15,9 @@
 #define LOG_USE_CLOG
 #include "Core/Logger.hpp"
 
+#include "Material/Lambertian.hpp"
+#include "Material/Metal.hpp"
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif 
@@ -43,23 +46,41 @@ int main(int argc, char* argv[])
 
     SET_SHOW_TO_LEVEL(settings.debugVerbosity);
     MESSAGE_LOG_EX(std::format("Initial seed= {:}", settings.seed), "App Init", DebugVerbosity::FULL_DEBUG);
+
+    //-- RNG -------------------------------
+    RNG::Get() = RNG(Settings().seed);
+
     //-- Camera ----------------------------
     Camera camera(settings.aspectRatio, settings.imageWidth);
+
+    //-- Materials -----------------------------
+    std::shared_ptr<Material> m1 = std::make_shared<Lambertian>(Lambertian({ 0.1f, 0.2f, 0.5f }));
+    std::shared_ptr<Material> m2 = std::make_shared<Lambertian>(Lambertian({ 0.8f, 0.8f, 0.0f }));
+    std::shared_ptr<Material> mr1 = std::make_shared<Metal>(Metal({ 0.8f, 0.8f, 0.8f }));
+    std::shared_ptr<Material> mr2 = std::make_shared<Metal>(Metal({ 0.8f, 0.6f, 0.2f }));
+
 
     //-- Scene - 1 -----------------------------
     HittableList objects;
     //Sphere s({ 0.f,0.f,1.f }, 0.5f);
-    objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, 0.f, -1.f), 0.5f));
-    objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
+    objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, 0.f, -1.f), 0.5f, m1));
+    objects.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f, m2));
     
     //-- Scene - 2 -----------------------------
     HittableList objects2;
-    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(-0.5f, 0.f, -1.f), 0.5f));
-    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.5f, 0.f, -1.f), 0.5f));
-    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, 0.f, -1.2f), 0.5f, m1));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(-1.0f, 0.f, -1.f), 0.5f, mr1));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(1.0f, 0.f, -1.f), 0.5f, mr2));
+    objects2.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f, m2));
+    
+    //-- Scene - 3 -----------------------------
+    HittableList objects3;
+    objects3.Add(std::make_shared<Sphere>(Maths::Vec3(-0.5f, 0.f, -1.f), 0.5f, mr1));
+    objects3.Add(std::make_shared<Sphere>(Maths::Vec3(0.5f, 0.f, -1.f), 0.5f, mr2));
+    objects3.Add(std::make_shared<Sphere>(Maths::Vec3(0.f, -100.5f, -1.f), 100.f, m2));
 
     //------------------------------------------
-    HittableList* sceneToUse = &objects;
+    HittableList* sceneToUse = &objects3;
 
     camera.Render(*sceneToUse,0,0,false);
 
@@ -73,6 +94,8 @@ int main(int argc, char* argv[])
         case 1:
             sceneToUse = &objects2;
             break;
+        case 2:
+            sceneToUse = &objects3;
         default:
             sceneToUse = &objects;
             break;

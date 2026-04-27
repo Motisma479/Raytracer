@@ -46,6 +46,9 @@ set(SOURCES
     "Sources/Hittable/HittableList.cpp"
     "Sources/Hittable/Sphere.cpp"
 
+    "Sources/Material/Lambertian.cpp"
+    "Sources/Material/Metal.cpp"
+
     "Sources/LowRenderer/Camera.cpp"
 )
 
