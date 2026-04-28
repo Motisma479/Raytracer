@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <unordered_map>
+#include <iostream>
 
 #ifndef LOG_FILE_LOCATION
 #define LOG_FILE_LOCATION "Generated/Logs/"
@@ -19,15 +20,16 @@ enum class Severity : uint8_t
 {
 	NORMAL,
 	WARNING,
-	ERROR
+	ERR
 };
+
 inline std::ostream& operator<<(std::ostream& os, Severity s)
 {
 	switch (s)
 	{
 	case Severity::NORMAL:  return os << "NORMAL";
 	case Severity::WARNING: return os << "WARNING";
-	case Severity::ERROR:   return os << "ERROR";
+	case Severity::ERR:   return os << "ERROR";
 	}
 	return os << "UNKNOWN";
 }
@@ -103,7 +105,7 @@ public:
 #endif
 #ifdef LOG_USE_CLOG
 		if (logData.level > showToLevel) return;
-		std::clog << (logData.severity == Severity::WARNING ? "\033[38;2;229;194;0m" : logData.severity == Severity::ERROR ? "\033[38;2;237;38;36m" : "")
+		std::clog << (logData.severity == Severity::WARNING ? "\033[38;2;229;194;0m" : logData.severity == Severity::ERR ? "\033[38;2;237;38;36m" : "")
 			<< "[" << logData.timeAsString << "][" << logData.category << "][" << logData.severity << "]: " << logData.message
 			<< "\033[0m";
 #endif
@@ -175,7 +177,7 @@ private:
 #define WARNING_LOG(message) Logger::Get().Log(Severity::WARNING, "Engine", message, 0)
 #define WARNING_LOG_EX(message, category, level) Logger::Get().Log(Severity::WARNING, category, message, (unsigned int)level)
 
-#define ERROR_LOG(message) Logger::Get().Log(Severity::ERROR, "Engine", message, 0)
-#define ERROR_LOG_EX(message, category, level) Logger::Get().Log(Severity::ERROR, category, message, (unsigned int)level)
+#define ERROR_LOG(message) Logger::Get().Log(Severity::ERR, "Engine", message, 0)
+#define ERROR_LOG_EX(message, category, level) Logger::Get().Log(Severity::ERR, category, message, (unsigned int)level)
 
 #define SET_SHOW_TO_LEVEL(newLevel) Logger::Get().SetShowToLevel((unsigned int)newLevel)

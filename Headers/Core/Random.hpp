@@ -1,6 +1,4 @@
 #pragma once
-#include "Core/Type.hpp"
-#include <LibMath/Maths.hpp>
 
 //Use a PCG generator
 class RNG

@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include <iostream>
 #include "Core/Settings.hpp"
 
@@ -8,12 +9,7 @@
 
 #include <functional>
 
-#include "Core/LogLevels.hpp"
-
 #include "Core/Window.hpp"
-
-#define LOG_USE_CLOG
-#include "Core/Logger.hpp"
 
 #include "Material/Lambertian.hpp"
 #include "Material/Metal.hpp"

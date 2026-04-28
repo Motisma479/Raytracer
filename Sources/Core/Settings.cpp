@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "Core/Settings.hpp"
-#include "Core/Logger.hpp"
 #include <iostream>
 AppSettings settings;
 

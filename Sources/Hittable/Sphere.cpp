@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "Hittable/Sphere.hpp"
 
 Sphere::Sphere(const Maths::Vec3& center_, f32 radius_, std::shared_ptr<Material> material_) : _center(center_), _radius(std::fmax(0,radius_)), _material(material_) {}

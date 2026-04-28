@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "Material/Metal.hpp"
-#include "Core/Random.hpp"
 
 Metal::Metal(const Color& albedo_) : _albedo(albedo_) {}
 

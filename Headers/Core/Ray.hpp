@@ -1,6 +1,4 @@
 #pragma once
-#include <LibMath/Maths.hpp>
-#include "Core/Type.hpp"
 
 class Ray
 {

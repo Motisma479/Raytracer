@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "Material/Lambertian.hpp"
 #include "Core/Random.hpp"
 

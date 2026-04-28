@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Type.hpp"
 
 class Interval
 {

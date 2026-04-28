@@ -1,6 +1,4 @@
 #pragma once
-
-#include <LibMath/Maths.hpp>
 #include "Core/Color.hpp"
 #include "Core/Random.hpp"
 #include <vector>

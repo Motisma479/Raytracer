@@ -1,7 +1,5 @@
 #pragma once
-#include "Core/Type.hpp"
 #include "Core/Color.hpp"
-#include "LibMath/Maths.hpp"
 
 #include <vector>
 #include <functional>

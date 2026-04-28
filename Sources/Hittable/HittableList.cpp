@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "Hittable/HittableList.hpp"
 
 HittableList::HittableList() {}

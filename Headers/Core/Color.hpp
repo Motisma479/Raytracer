@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Type.hpp"
 #include <string>
 
 namespace Maths

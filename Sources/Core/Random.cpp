@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "Core/Random.hpp"
 
 RNG::RNG(u64 seed_) : _state(seed_), _inc(1442695040888963407u) {}

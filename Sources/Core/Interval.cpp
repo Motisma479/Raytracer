@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "Core/Interval.hpp"
-#include <LibMath/Maths.hpp>
 
 const Interval Interval::empty = Interval(+Maths::Constants::INF, -Maths::Constants::INF);
 const Interval Interval::universe = Interval(-Maths::Constants::INF, +Maths::Constants::INF);

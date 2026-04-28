@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "Core/Hittable.hpp"
 
 void HitRecord::SetFaceNormal(const Ray& ray_, const Maths::Vec3& outwardNormal_)

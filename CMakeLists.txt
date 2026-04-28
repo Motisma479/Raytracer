@@ -32,6 +32,7 @@ include_directories( "Externals/STB" )
 #---------------------------------------------------------------------
 
 include_directories( "Headers" )
+set(PRECOMPILED_HEADER "Headers/pch.hpp")
 set(SOURCES
     "Sources/main.cpp"
 
@@ -53,6 +54,7 @@ set(SOURCES
 )
 
 add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES})
+target_precompile_headers(${PROJECT_NAME} PRIVATE ${PRECOMPILED_HEADER})
 target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)
 
 add_custom_command(

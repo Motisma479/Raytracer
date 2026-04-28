@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "Core/Color.hpp"
-#include <LibMath/Maths.hpp>
 
 Color::Color() : r(0), g(0), b(0) {}
 Color::Color(f32 r_, f32 g_, f32 b_) : r(r_), g(g_), b(b_) {}

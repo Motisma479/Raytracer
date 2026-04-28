@@ -1,6 +1,5 @@
+#include "pch.hpp"
 #include "Core/Window.hpp"
-#include "Core/Logger.hpp"
-#include "Core/LogLevels.hpp"
 
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
