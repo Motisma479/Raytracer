@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Color.hpp"
 #include "Core/Random.hpp"
-#include <vector>
 
 class IHittable;
 class Ray;

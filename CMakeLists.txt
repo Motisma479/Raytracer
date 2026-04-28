@@ -53,7 +53,15 @@ set(SOURCES
     "Sources/LowRenderer/Camera.cpp"
 )
 
-add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES})
+set(PLATFORM_SOURCES)
+
+if(WIN32)
+    set(PLATFORM_SOURCES
+        "Sources/Platform/Windows/Clipboard.cpp"
+    )
+endif()
+
+add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES} ${PLATFORM_SOURCES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${PRECOMPILED_HEADER})
 target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)
 
