@@ -1,9 +1,6 @@
 #pragma once
 #include "Core/Color.hpp"
-
-#include <vector>
 #include <functional>
-#include <string>
 
 class Window
 {

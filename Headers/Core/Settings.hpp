@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <vector>
 #include <chrono>
 
 // 16.f / 9.f; //common PC screen ratio

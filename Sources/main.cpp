@@ -1,22 +1,21 @@
 #include "pch.hpp"
 #include <iostream>
-#include "Core/Settings.hpp"
-
-#include "LowRenderer/Camera.hpp"
-
-#include "Hittable/HittableList.hpp"
-#include "Hittable/Sphere.hpp"
-
 #include <functional>
 
+#include "Core/Settings.hpp"
+#include "LowRenderer/Camera.hpp"
 #include "Core/Window.hpp"
 
+//-- Hittable Objects -------------
+#include "Hittable/HittableList.hpp"
+#include "Hittable/Sphere.hpp"
+//---------------------------------
+
+//-- Materials --------------------
 #include "Material/Lambertian.hpp"
 #include "Material/Metal.hpp"
+//---------------------------------
 
-#ifdef _WIN32
-#include <Windows.h>
-#endif 
 int main(int argc, char* argv[])
 {
 #ifdef _WIN32

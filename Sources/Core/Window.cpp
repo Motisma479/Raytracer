@@ -8,7 +8,6 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <queue>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
