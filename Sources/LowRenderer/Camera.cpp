@@ -89,6 +89,28 @@ void Camera::Render(const IHittable& object_, const f32 minJitering, const f32 m
     preImage = image;
 }
 
+//void Camera::Render(const IHittable& object_, const f32 minJitering, const f32 maxJitering, bool useHistory)
+//{
+//    return;
+//    for (s32 j = 0; j < _imageHeight; j++) {
+//        for (s32 i = 0; i < _imageWidth; i++) {
+//            const u32 pixelIndex = j * _imageWidth + i;
+//
+//            Color newColor = {1,0,0};
+//
+//            static auto linearToGamma = [](f32 color) {return color > 0 ? std::sqrt(color) : 0; };
+//
+//            newColor.r = linearToGamma(newColor.r);
+//            newColor.g = linearToGamma(newColor.g);
+//            newColor.b = linearToGamma(newColor.b);
+//            
+//            image[pixelIndex] = newColor;
+//
+//        }
+//    }
+//    preImage = image;
+//}
+
 void Camera::ScreenShot()
 {
     MESSAGE_LOG_EX("Exporting to png...", "ScreenShot", DebugVerbosity::LITTLE_DEBUG);
@@ -145,7 +167,7 @@ void Camera::Init()
     f32 focalLength = 1.f;
     f32 viewportHeight = 2.f;
     f32 viewportWidth = viewportHeight * (static_cast<f32>(_imageWidth) / _imageHeight);
-    Maths::Vec3 cameraCenter = { 0.f, 0.f, 0.f };
+    _center = Maths::Vec3(0.f, 0.f, 0.f);
 
     Maths::Vec3 viewportU(viewportWidth, 0.f, 0.f);
     Maths::Vec3 viewportV(0.f, -viewportHeight, 0.f);
@@ -153,7 +175,7 @@ void Camera::Init()
     _pixelDeltaU = viewportU / _imageWidth;
     _pixelDeltaV = viewportV / _imageHeight;
 
-    Maths::Vec3 viewportUpperLeft = cameraCenter - Maths::Vec3(0.f, 0.f, focalLength) - viewportU * 0.5f - viewportV * 0.5f;
+    Maths::Vec3 viewportUpperLeft = _center - Maths::Vec3(0.f, 0.f, focalLength) - viewportU * 0.5f - viewportV * 0.5f;
     _pixel00Loc = viewportUpperLeft + (_pixelDeltaU + _pixelDeltaV) * 0.5f;
 }
 
@@ -172,11 +194,6 @@ Color Camera::RayColor(const Ray& ray_, s32 depth_, const IHittable& object_) co
             return RayColor(scattered, depth_ - 1, object_) * attenuation;
         }
         return { 0,0,0 };
-
-        //return (record.normal + 1) * 0.5;
-        Maths::Vec3 direction = record.normal + RNG::Get().NextVec3Unit();//rng->NextOnHemisphere(record.normal);
-        Color res = RayColor(Ray(record.p, direction), depth_ - 1, object_);
-        return Color(res.r * 0.5, res.g * 0.5, res.b * 0.5);
     }
 
     Maths::Vec3 unitDirection = Maths::Vectors::Normalize(ray_.dir);

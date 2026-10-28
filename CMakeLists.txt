@@ -63,11 +63,18 @@ endif()
 
 add_executable(${PROJECT_NAME} ${EXTERNALS} ${SOURCES} ${PLATFORM_SOURCES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${PRECOMPILED_HEADER})
-target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl)
+find_package(OpenCL REQUIRED)
+target_link_libraries( ${PROJECT_NAME} PRIVATE glfw glad_gl OpenCL::OpenCL)
 
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     ${CMAKE_CURRENT_LIST_DIR}/icon.png ${CMAKE_CURRENT_BINARY_DIR}/icon.png
     COMMENT "Copying icon.png to output directory"
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/Resources
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/Resources
 )
